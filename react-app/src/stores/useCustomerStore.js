@@ -1,10 +1,12 @@
 import { create } from 'zustand';
+import driveService from '../services/driveService.js';
 
 /**
  * Customer Store
  * Manages customer data, selection, and CRUD operations
  *
  * Compatible with vanilla JS app using 'bydCRM' localStorage key
+ * Syncs data with Google Drive for cross-platform consistency
  */
 const useCustomerStore = create((set, get) => ({
   // State
@@ -12,11 +14,14 @@ const useCustomerStore = create((set, get) => ({
   selectedCustomerId: null,
   isLoading: false,
   error: null,
+  isSyncing: false,
+  lastSyncTime: null,
+  syncError: null,
 
   // Actions
   setCustomers: (customers) => set({ customers }),
 
-  addCustomer: (customerData) => {
+  addCustomer: async (customerData) => {
     const newCustomer = {
       id: Date.now(), // Use numeric ID to match vanilla JS
       name: customerData.name || '',
@@ -43,10 +48,16 @@ const useCustomerStore = create((set, get) => ({
       customers: [...state.customers, newCustomer]
     }));
 
+    // Save to localStorage immediately
+    get().saveToLocalStorage();
+
+    // Sync to Drive if authenticated
+    await get().syncToDrive();
+
     return newCustomer;
   },
 
-  updateCustomer: (id, updates) => {
+  updateCustomer: async (id, updates) => {
     set((state) => ({
       customers: state.customers.map((c) => {
         // Handle both string and numeric IDs for compatibility
@@ -69,9 +80,15 @@ const useCustomerStore = create((set, get) => ({
         return c;
       })
     }));
+
+    // Save to localStorage immediately
+    get().saveToLocalStorage();
+
+    // Sync to Drive if authenticated
+    await get().syncToDrive();
   },
 
-  deleteCustomer: (id) => {
+  deleteCustomer: async (id) => {
     set((state) => {
       // Handle both string and numeric IDs
       const targetId = typeof id === 'string' ? parseInt(id) : id;
@@ -87,6 +104,12 @@ const useCustomerStore = create((set, get) => ({
         selectedCustomerId: selectedId === targetId ? null : state.selectedCustomerId
       };
     });
+
+    // Save to localStorage immediately
+    get().saveToLocalStorage();
+
+    // Sync to Drive if authenticated
+    await get().syncToDrive();
   },
 
   selectCustomer: (id) => set({ selectedCustomerId: id }),
@@ -138,6 +161,151 @@ const useCustomerStore = create((set, get) => ({
 
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
+
+  // Google Drive Sync Methods
+
+  /**
+   * Initialize Google Drive sync
+   */
+  initializeDriveSync: async () => {
+    try {
+      console.log('Initializing Drive sync...');
+      await driveService.initialize();
+      console.log('Drive sync initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Drive sync:', error);
+      set({ syncError: error.message });
+    }
+  },
+
+  /**
+   * Sync customer data to Google Drive (upload)
+   */
+  syncToDrive: async () => {
+    try {
+      // Check if user is signed in
+      const token = localStorage.getItem('googleAccessToken');
+      if (!token) {
+        console.log('Not signed in, skipping Drive sync');
+        return;
+      }
+
+      const { customers, isSyncing } = get();
+
+      // Prevent concurrent syncs
+      if (isSyncing) {
+        console.log('Sync already in progress, skipping...');
+        return;
+      }
+
+      set({ isSyncing: true, syncError: null });
+
+      await driveService.uploadCustomerData(customers);
+
+      set({
+        isSyncing: false,
+        lastSyncTime: new Date(),
+        syncError: null
+      });
+
+      console.log('Successfully synced to Drive');
+    } catch (error) {
+      console.error('Failed to sync to Drive:', error);
+      set({
+        isSyncing: false,
+        syncError: error.message
+      });
+    }
+  },
+
+  /**
+   * Sync customer data from Google Drive (download and merge)
+   */
+  syncFromDrive: async (direction = 'merge') => {
+    try {
+      // Check if user is signed in
+      const token = localStorage.getItem('googleAccessToken');
+      if (!token) {
+        console.log('Not signed in, cannot sync from Drive');
+        return;
+      }
+
+      const { customers, isSyncing } = get();
+
+      // Prevent concurrent syncs
+      if (isSyncing) {
+        console.log('Sync already in progress, skipping...');
+        return;
+      }
+
+      set({ isSyncing: true, syncError: null, isLoading: true });
+
+      const mergedCustomers = await driveService.syncCustomerData(customers, direction);
+
+      set({
+        customers: mergedCustomers,
+        isSyncing: false,
+        isLoading: false,
+        lastSyncTime: new Date(),
+        syncError: null
+      });
+
+      // Save merged data to localStorage
+      get().saveToLocalStorage();
+
+      console.log(`Successfully synced from Drive (${direction}):`, mergedCustomers.length, 'customers');
+    } catch (error) {
+      console.error('Failed to sync from Drive:', error);
+      set({
+        isSyncing: false,
+        isLoading: false,
+        syncError: error.message
+      });
+    }
+  },
+
+  /**
+   * Create a Google Drive folder for a customer
+   */
+  createCustomerDriveFolder: async (customerId) => {
+    try {
+      const { customers } = get();
+      const customer = customers.find(c => {
+        const cId = typeof c.id === 'string' ? parseInt(c.id) : c.id;
+        const targetId = typeof customerId === 'string' ? parseInt(customerId) : customerId;
+        return cId === targetId;
+      });
+
+      if (!customer) {
+        throw new Error('Customer not found');
+      }
+
+      const { folderId, folderLink } = await driveService.createCustomerFolder(
+        customer.name,
+        customer.id
+      );
+
+      // Update customer with folder info
+      await get().updateCustomer(customerId, {
+        driveFolderId: folderId,
+        driveFolderLink: folderLink
+      });
+
+      console.log(`Created Drive folder for ${customer.name}`);
+      return { folderId, folderLink };
+    } catch (error) {
+      console.error('Failed to create customer Drive folder:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get sync status
+   */
+  getSyncStatus: () => {
+    const { isSyncing, lastSyncTime, syncError } = get();
+    return { isSyncing, lastSyncTime, syncError };
+  },
 }));
 
 export default useCustomerStore;
