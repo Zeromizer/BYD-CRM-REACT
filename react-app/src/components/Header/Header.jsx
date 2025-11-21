@@ -156,7 +156,7 @@ function Header() {
                 <div className="dropdown-divider"></div>
                 <a
                   className="dropdown-item"
-                  href="/classic/"
+                  href="../"
                   rel="noopener noreferrer"
                 >
                   Switch to Classic Version

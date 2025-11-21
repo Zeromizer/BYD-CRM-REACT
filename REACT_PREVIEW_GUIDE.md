@@ -1,10 +1,8 @@
-# BYD CRM React - Google Drive Sync Guide
+# BYD CRM React Preview - Google Drive Sync Guide
 
 ## Overview
 
-This is the **default React version** of the BYD CRM system with full Google Drive synchronization. The React app provides a modern, component-based architecture with automatic data syncing to Google Drive, ensuring your customer data is always backed up and accessible across both the React and Classic versions.
-
-**Note**: React is now the default version served at the root (`/`). The Classic version is available at `/classic/` for legacy support.
+This is the React preview version of the BYD CRM system with full Google Drive synchronization. The React app provides a modern, component-based architecture with automatic data syncing to Google Drive, ensuring your customer data is always backed up and accessible across both the classic and React versions.
 
 ## Key Features
 
@@ -61,21 +59,20 @@ This is the **default React version** of the BYD CRM system with full Google Dri
    ```bash
    npm run build
    ```
-   This builds the React app and deploys it to the root directory
+   This creates optimized files in the `dist/` folder
 
 ### Running Both Versions
 
-To run both the React and Classic versions simultaneously:
+To run both the classic and React versions simultaneously:
 
 ```bash
 # From the root directory
-npm run build  # Build React app first
-npm start      # Start server
+npm run dev
 ```
 
 Then access:
-- **React version (default)**: `http://localhost:8000/`
-- **Classic version**: `http://localhost:8000/classic/`
+- Classic version: `http://localhost:8000/index.html`
+- React version: `http://localhost:8000/react/index.html`
 
 ## Google Drive Integration
 
