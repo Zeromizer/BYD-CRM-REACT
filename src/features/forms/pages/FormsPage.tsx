@@ -531,7 +531,7 @@ function PrintPreviewModal({
     if (fieldKey === 'todayDate') {
       return new Date().toLocaleDateString();
     }
-    return String((customer as Record<string, unknown>)[fieldKey] || '');
+    return String((customer as unknown as Record<string, unknown>)[fieldKey] || '');
   };
 
   const handlePrint = () => {

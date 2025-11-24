@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 // Mock window.gapi if needed
-global.gapi = {
+(globalThis as any).gapi = {
   load: () => {},
   client: {
     init: () => Promise.resolve(),
@@ -31,4 +31,4 @@ global.gapi = {
       },
     }),
   },
-} as any;
+};

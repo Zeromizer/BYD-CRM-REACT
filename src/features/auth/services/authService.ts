@@ -16,7 +16,6 @@ export interface Consultant {
  */
 export class AuthService {
   private static instance: AuthService;
-  private gapi: typeof gapi | null = null;
   private auth: gapi.auth2.GoogleAuth | null = null;
   private isInitialized = false;
 
@@ -74,11 +73,10 @@ export class AuthService {
         await gapi.client.init({
           apiKey: CONFIG.GOOGLE.API_KEY,
           clientId: CONFIG.GOOGLE.CLIENT_ID,
-          discoveryDocs: CONFIG.GOOGLE.DISCOVERY_DOCS,
+          discoveryDocs: [...CONFIG.GOOGLE.DISCOVERY_DOCS],
           scope: CONFIG.GOOGLE.SCOPES,
         });
 
-        this.gapi = gapi;
         this.auth = gapi.auth2.getAuthInstance();
         this.isInitialized = true;
 
