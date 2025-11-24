@@ -43,6 +43,11 @@ export class AuthService {
     }
 
     try {
+      // Validate configuration first
+      if (!CONFIG.GOOGLE.CLIENT_ID || !CONFIG.GOOGLE.API_KEY) {
+        throw new Error('Google credentials are not configured. Please check your .env file.');
+      }
+
       // Load both GIS and GAPI scripts
       await Promise.all([
         this.loadGISScript(),
@@ -50,16 +55,23 @@ export class AuthService {
       ]);
 
       // Initialize token client for OAuth 2.0
-      this.tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CONFIG.GOOGLE.CLIENT_ID,
-        scope: CONFIG.GOOGLE.SCOPES,
-        callback: (response) => {
-          if (response.access_token) {
-            this.accessToken = response.access_token;
-            this.notifyAuthStateChange(true);
-          }
-        },
-      });
+      try {
+        this.tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CONFIG.GOOGLE.CLIENT_ID,
+          scope: CONFIG.GOOGLE.SCOPES,
+          callback: (response) => {
+            if (response.access_token) {
+              this.accessToken = response.access_token;
+              this.notifyAuthStateChange(true);
+            }
+          },
+        });
+      } catch (error) {
+        console.error('❌ Failed to initialize OAuth token client:', error);
+        throw new Error(
+          'Failed to initialize Google OAuth. Please verify your Client ID is correct and configured for this domain in Google Cloud Console.'
+        );
+      }
 
       // Initialize GAPI client for Drive API
       await new Promise<void>((resolve, reject) => {
@@ -70,8 +82,12 @@ export class AuthService {
               discoveryDocs: [...CONFIG.GOOGLE.DISCOVERY_DOCS],
             });
             resolve();
-          } catch (error) {
-            reject(error);
+          } catch (error: any) {
+            console.error('❌ GAPI client initialization error:', error);
+            const errorMsg = error?.result?.error?.message || error?.message || 'Unknown error';
+            reject(new Error(
+              `Failed to initialize Google API client: ${errorMsg}. Please verify your API Key is correct and enabled for Google Drive API.`
+            ));
           }
         });
       });

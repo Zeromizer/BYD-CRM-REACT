@@ -31,7 +31,27 @@ export function LoginPage() {
 
         {error && (
           <div className="login-error">
-            {error}
+            <strong>⚠️ Error:</strong> {error}
+            {(error.includes('credentials') ||
+              error.includes('Client ID') ||
+              error.includes('API Key') ||
+              error.includes('OAuth')) && (
+              <div className="error-help">
+                <p>This usually means Google OAuth is not configured correctly.</p>
+                <p>
+                  <strong>To fix this:</strong>
+                </p>
+                <ol style={{ textAlign: 'left', marginTop: '0.5rem' }}>
+                  <li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Google Cloud Console</a></li>
+                  <li>Add your domain to "Authorized JavaScript origins"</li>
+                  <li>Add your domain to "Authorized redirect URIs"</li>
+                  <li>Enable Google Drive API for your project</li>
+                </ol>
+                <p style={{ marginTop: '0.5rem' }}>
+                  See <a href="https://github.com/Zeromizer/BYD-CRM-REACT/blob/main/GOOGLE_SETUP_GUIDE.md" target="_blank" rel="noopener noreferrer">Setup Guide</a> for detailed instructions.
+                </p>
+              </div>
+            )}
           </div>
         )}
 

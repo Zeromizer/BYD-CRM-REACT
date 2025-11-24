@@ -59,6 +59,38 @@
   color: var(--color-error);
   font-size: 0.875rem;
   margin-bottom: var(--spacing-lg);
+  text-align: left;
+}
+
+.error-help {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(239, 68, 68, 0.3);
+  font-size: 0.813rem;
+  line-height: 1.5;
+}
+
+.error-help p {
+  margin: 0.5rem 0;
+}
+
+.error-help ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.error-help li {
+  margin: 0.25rem 0;
+}
+
+.error-help a {
+  color: var(--color-error);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.error-help a:hover {
+  color: #dc2626;
 }
 
 .btn-google-signin {
