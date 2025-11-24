@@ -1,18 +1,18 @@
 :root {
   /* Colors */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
+  --color-primary: #00d4d4;
+  --color-primary-hover: #00b8b8;
   --color-secondary: #64748b;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  --color-info: #3b82f6;
+  --color-info: #00d4d4;
 
   /* Backgrounds */
   --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-dark: #1e293b;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #252b3d;
+  --bg-dark: #1a1f2e;
 
   /* Text */
   --text-primary: #0f172a;
@@ -164,7 +164,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 212, 212, 0.1);
 }
 
 /* Utility Classes */

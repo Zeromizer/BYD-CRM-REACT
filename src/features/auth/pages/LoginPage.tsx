@@ -17,10 +17,12 @@ export function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-logo">
-          <span className="logo-icon">🚗</span>
-          <h1>BYD CRM</h1>
+          <div className="logo-text">
+            <span className="logo-main">BYD</span>
+            <span className="logo-subtitle-small">MOTOR-EAST</span>
+          </div>
         </div>
-        
+
         <p className="login-subtitle">
           Customer Relationship Management System
         </p>
@@ -31,7 +33,7 @@ export function LoginPage() {
 
         {error && (
           <div className="login-error">
-            <strong>⚠️ Error:</strong> {error}
+            <strong>Error:</strong> {error}
             {(error.includes('credentials') ||
               error.includes('Client ID') ||
               error.includes('API Key') ||
@@ -96,12 +98,12 @@ export function LoginPage() {
         <div className="login-features">
           <h3>Features</h3>
           <ul>
-            <li>✅ Secure customer data management</li>
-            <li>✅ Google Drive integration for documents</li>
-            <li>✅ Form templates with auto-fill</li>
-            <li>✅ Excel template generation</li>
-            <li>✅ Progress tracking checklist</li>
-            <li>✅ Works offline</li>
+            <li>Secure customer data management</li>
+            <li>Google Drive integration for documents</li>
+            <li>Form templates with auto-fill</li>
+            <li>Excel template generation</li>
+            <li>Progress tracking checklist</li>
+            <li>Works offline</li>
           </ul>
         </div>
 
