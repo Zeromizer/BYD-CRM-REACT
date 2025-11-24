@@ -5,6 +5,7 @@ import compression from 'vite-plugin-compression';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/BYD-CRM-REACT/',
   plugins: [
     react(),
     compression({ algorithm: 'gzip' }),

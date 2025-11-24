@@ -228,11 +228,47 @@ Output will be in `dist/` directory.
 
 ## 🚢 Deployment
 
-### GitHub Pages
+### GitHub Pages (Recommended for Testing)
 
-1. Update `vite.config.ts` with your repo name
-2. Build: `npm run build`
-3. Deploy `dist/` folder to GitHub Pages
+This project is configured for automatic deployment to GitHub Pages. Follow these steps:
+
+#### 1. Configure GitHub Secrets
+
+Go to your repository settings → Secrets and variables → Actions, and add these secrets:
+
+- `VITE_GOOGLE_CLIENT_ID`: `876961148543-8sdj3cti6q9tc523natb3g6jt789qlbr.apps.googleusercontent.com`
+- `VITE_GOOGLE_API_KEY`: `AIzaSyDH6E6B4u1m_uvr0mSdCxaCYIkzjSqUuY8`
+- `VITE_ENCRYPTION_SALT`: Generate a secure random string (at least 32 characters)
+
+#### 2. Update Google OAuth Settings
+
+In [Google Cloud Console](https://console.cloud.google.com/):
+1. Go to APIs & Services → Credentials
+2. Edit your OAuth 2.0 Client ID
+3. Add your GitHub Pages URL to **Authorized JavaScript origins**:
+   - `https://zeromizer.github.io`
+4. Add redirect URIs:
+   - `https://zeromizer.github.io/BYD-CRM-REACT/`
+
+#### 3. Enable GitHub Pages
+
+1. Go to repository Settings → Pages
+2. Set Source to "GitHub Actions"
+3. Save
+
+#### 4. Deploy
+
+The app will automatically deploy when you push to the `main` branch. You can also:
+- Trigger manual deployment from Actions tab → "Deploy to GitHub Pages" → Run workflow
+
+Your app will be available at: `https://zeromizer.github.io/BYD-CRM-REACT/`
+
+#### 5. Verify Deployment
+
+After deployment completes:
+1. Visit your GitHub Pages URL
+2. Try signing in with Google OAuth
+3. Check that the app loads correctly
 
 ### Other Platforms
 
@@ -241,6 +277,8 @@ The app is a static SPA and can be deployed to:
 - Netlify
 - Firebase Hosting
 - AWS S3 + CloudFront
+
+**Note**: For other platforms, you'll need to set the environment variables in their respective dashboards and update the OAuth authorized origins accordingly.
 
 ## 🐛 Troubleshooting
 
