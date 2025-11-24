@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="BYD MotorEast CRM - Customer Relationship Management System" />
     <title>BYD CRM - Customer Management</title>
+    <script>
+      // GitHub Pages SPA redirect recovery
+      // This restores the path after 404.html redirect
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
