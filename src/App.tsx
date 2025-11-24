@@ -97,7 +97,7 @@ function AppRoutes() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router basename="/BYD-CRM-REACT">
+      <Router>
         <AppRoutes />
       </Router>
     </QueryClientProvider>
