@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BYD CRM - Redirecting...</title>
+    <script>
+      // Redirect to the correct base path
+      const path = window.location.pathname;
+      const base = '/BYD-CRM-REACT';
+
+      // If we're not already at the base path, redirect there
+      if (!path.startsWith(base)) {
+        window.location.replace(base + '/');
+      } else {
+        // If we are at the base path, redirect to index
+        window.location.replace(base + '/');
+      }
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to BYD CRM...</p>
+  </body>
+</html>
