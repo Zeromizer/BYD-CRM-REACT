@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Customer } from '@/shared/lib/db';
-import { Button, Badge, Checkbox, Card, Modal } from '@/shared/components/ui';
+import { Button, Badge, Modal } from '@/shared/components/ui';
+import { DetailsTab } from './tabs/DetailsTab';
+import { ProposalTab } from './tabs/ProposalTab';
+import { VSATab } from './tabs/VSATab';
+import { DocumentsTab } from './tabs/DocumentsTab';
+import { ScannerTab } from './tabs/ScannerTab';
 import './CustomerDetails.css';
 
 interface CustomerDetailsProps {
@@ -12,17 +17,7 @@ interface CustomerDetailsProps {
   onOpenDrive?: () => void;
 }
 
-const CHECKLIST_ITEMS = [
-  { key: 'nricCollected', label: 'NRIC Collected' },
-  { key: 'testDriveCompleted', label: 'Test Drive Completed' },
-  { key: 'vsaSigned', label: 'VSA Signed' },
-  { key: 'depositReceived', label: 'Deposit Received' },
-  { key: 'loanApproved', label: 'Loan Approved' },
-  { key: 'insuranceArranged', label: 'Insurance Arranged' },
-  { key: 'vehicleReady', label: 'Vehicle Ready' },
-  { key: 'deliveryScheduled', label: 'Delivery Scheduled' },
-  { key: 'handoverCompleted', label: 'Handover Completed' },
-];
+type TabType = 'details' | 'proposal' | 'vsa' | 'documents' | 'scanner';
 
 export function CustomerDetails({
   customer,
@@ -34,6 +29,7 @@ export function CustomerDetails({
 }: CustomerDetailsProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('details');
 
   if (!customer) {
     return (
@@ -59,14 +55,24 @@ export function CustomerDetails({
     }
   };
 
-  const handleChecklistChange = async (key: string, checked: boolean) => {
-    await onUpdateChecklist(customer.id, key, checked);
-  };
+  const renderTabContent = () => {
+    if (!customer) return null;
 
-  const completedCount = CHECKLIST_ITEMS.filter(
-    (item) => customer.checklist?.[item.key]
-  ).length;
-  const progress = Math.round((completedCount / CHECKLIST_ITEMS.length) * 100);
+    switch (activeTab) {
+      case 'details':
+        return <DetailsTab customer={customer} onUpdateChecklist={onUpdateChecklist} />;
+      case 'proposal':
+        return <ProposalTab customer={customer} onEdit={onEdit} />;
+      case 'vsa':
+        return <VSATab customer={customer} onEdit={onEdit} />;
+      case 'documents':
+        return <DocumentsTab customer={customer} onOpenDrive={onOpenDrive} />;
+      case 'scanner':
+        return <ScannerTab customer={customer} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="customer-details">
@@ -98,131 +104,43 @@ export function CustomerDetails({
         </div>
       </div>
 
+      {/* Tab Navigation */}
+      <div className="tabs-nav">
+        <button
+          className={`tab-button ${activeTab === 'details' ? 'active' : ''}`}
+          onClick={() => setActiveTab('details')}
+        >
+          Details
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'proposal' ? 'active' : ''}`}
+          onClick={() => setActiveTab('proposal')}
+        >
+          Proposal
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'vsa' ? 'active' : ''}`}
+          onClick={() => setActiveTab('vsa')}
+        >
+          VSA
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'documents' ? 'active' : ''}`}
+          onClick={() => setActiveTab('documents')}
+        >
+          Documents
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'scanner' ? 'active' : ''}`}
+          onClick={() => setActiveTab('scanner')}
+        >
+          Scanner
+        </button>
+      </div>
+
+      {/* Tab Content */}
       <div className="details-content">
-        {/* Personal Information */}
-        <Card className="details-section">
-          <h3 className="section-title">Personal Information</h3>
-          <div className="info-grid">
-            <div className="info-item">
-              <label>NRIC</label>
-              <span>{customer.nric}</span>
-            </div>
-            <div className="info-item">
-              <label>Date of Birth</label>
-              <span>{new Date(customer.dob).toLocaleDateString()}</span>
-            </div>
-            <div className="info-item">
-              <label>Phone</label>
-              <span>
-                <a href={`tel:${customer.phone}`}>{customer.phone}</a>
-              </span>
-            </div>
-            <div className="info-item">
-              <label>Email</label>
-              <span>
-                {customer.email ? (
-                  <a href={`mailto:${customer.email}`}>{customer.email}</a>
-                ) : (
-                  '-'
-                )}
-              </span>
-            </div>
-            <div className="info-item">
-              <label>Occupation</label>
-              <span>{customer.occupation || '-'}</span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Address */}
-        <Card className="details-section">
-          <h3 className="section-title">Address</h3>
-          <p className="address-text">
-            {customer.address}
-            {customer.addressContinue && <br />}
-            {customer.addressContinue}
-          </p>
-        </Card>
-
-        {/* Sales Information */}
-        <Card className="details-section">
-          <h3 className="section-title">Sales Information</h3>
-          <div className="info-grid">
-            <div className="info-item">
-              <label>Sales Consultant</label>
-              <span>{customer.salesConsultant}</span>
-            </div>
-            <div className="info-item">
-              <label>VSA Number</label>
-              <span>{customer.vsaNo || '-'}</span>
-            </div>
-            <div className="info-item">
-              <label>Created</label>
-              <span>{new Date(customer.createdAt).toLocaleString()}</span>
-            </div>
-            <div className="info-item">
-              <label>Last Updated</label>
-              <span>{new Date(customer.updatedAt).toLocaleString()}</span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Google Drive */}
-        {customer.driveFolderId && (
-          <Card className="details-section">
-            <h3 className="section-title">Documents</h3>
-            <div className="drive-section">
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  if (customer.driveFolderLink) {
-                    window.open(customer.driveFolderLink, '_blank');
-                  } else if (onOpenDrive) {
-                    onOpenDrive();
-                  }
-                }}
-              >
-                📁 Open Google Drive Folder
-              </Button>
-            </div>
-          </Card>
-        )}
-
-        {/* Checklist */}
-        <Card className="details-section">
-          <div className="section-header">
-            <h3 className="section-title">Progress Checklist</h3>
-            <span className="progress-text">
-              {completedCount}/{CHECKLIST_ITEMS.length} ({progress}%)
-            </span>
-          </div>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="checklist">
-            {CHECKLIST_ITEMS.map((item) => (
-              <Checkbox
-                key={item.key}
-                label={item.label}
-                checked={customer.checklist?.[item.key] || false}
-                onChange={(e) =>
-                  handleChecklistChange(item.key, e.target.checked)
-                }
-              />
-            ))}
-          </div>
-        </Card>
-
-        {/* Notes */}
-        {customer.notes && (
-          <Card className="details-section">
-            <h3 className="section-title">Notes</h3>
-            <p className="notes-text">{customer.notes}</p>
-          </Card>
-        )}
+        {renderTabContent()}
       </div>
 
       {/* Delete Confirmation Modal */}

@@ -22,6 +22,73 @@ export interface Customer {
   subfolders?: Record<string, string>;
   notes?: string;
   checklist: Record<string, boolean>;
+
+  // Proposal Information
+  proposalModel?: string;
+  proposalBank?: string;
+  proposalSellingPrice?: number;
+  proposalInterestRate?: number;
+  proposalDownpayment?: number;
+  proposalLoanTenure?: number;
+
+  // Loan & Fee Details
+  proposalLoanAmount?: number;
+  proposalAdminFee?: number;
+  proposalReferralFee?: number;
+
+  // Trade-In Details (Proposal)
+  proposalTradeInModel?: string;
+  proposalTradeInCarPlate?: string;
+  proposalQuotedTradeInPrice?: number;
+  proposalLowLoanSurcharge?: number;
+  proposalNoLoanSurcharge?: number;
+
+  // Additional Proposal Information
+  proposalBenefitsGiven?: string;
+  proposalRemarks?: string;
+
+  // BYD New Car Details
+  vsaMakeModel?: string;
+  vsaYearOfManufacture?: number;
+  vsaBodyColour?: string;
+  vsaUpholstery?: string;
+  vsaPrzType?: string;
+
+  // BYD New Car Package
+  vsaPackage?: string;
+  vsaSellingWithCOE?: string;
+  vsaSellingPriceOnPriceList?: number;
+  vsaPurchasePriceWithCOE?: number;
+  vsaCoeRebateLevel?: number;
+  vsaDeposit?: number;
+  vsaLessOthers?: number;
+  vsaAddOthers?: number;
+  vsaApproximateDeliveryDate?: string;
+
+  // Trade In Car Details (VSA)
+  vsaTradeInCarNo?: string;
+  vsaTradeInCarModel?: string;
+  vsaTradeInAmount?: number;
+
+  // Delivery Details
+  vsaDateOfRegistration?: string;
+  vsaRegistrationNo?: string;
+  vsaChassisNo?: string;
+  vsaEngineNo?: string;
+  vsaMotorNo?: string;
+
+  // Insurance
+  vsaInsuranceCompany?: string;
+  vsaInsuranceFee?: number;
+
+  // Remarks & Loan Details (VSA)
+  vsaLoanAmount?: number;
+  vsaInterest?: number;
+  vsaTenure?: number;
+  vsaAdminFee?: number;
+  vsaInsuranceSubsidy?: number;
+  vsaMonthlyRepayment?: number;
+
   createdAt: string;
   updatedAt: string;
   encrypted: boolean;

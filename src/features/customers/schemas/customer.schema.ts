@@ -89,6 +89,231 @@ export const customerSchema = z.object({
 
   checklist: z.record(z.boolean()).default({}),
 
+  // Proposal Information
+  proposalModel: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  proposalBank: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  proposalSellingPrice: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalInterestRate: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalDownpayment: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalLoanTenure: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
+  // Loan & Fee Details
+  proposalLoanAmount: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalAdminFee: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalReferralFee: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
+  // Trade-In Details (Proposal)
+  proposalTradeInModel: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  proposalTradeInCarPlate: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  proposalQuotedTradeInPrice: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalLowLoanSurcharge: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  proposalNoLoanSurcharge: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
+  // Additional Proposal Information
+  proposalBenefitsGiven: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  proposalRemarks: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
+  // BYD New Car Details
+  vsaMakeModel: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaYearOfManufacture: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaBodyColour: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaUpholstery: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaPrzType: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
+  // BYD New Car Package
+  vsaPackage: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaSellingWithCOE: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaSellingPriceOnPriceList: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaPurchasePriceWithCOE: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaCoeRebateLevel: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaDeposit: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaLessOthers: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaAddOthers: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaApproximateDeliveryDate: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
+  // Trade In Car Details (VSA)
+  vsaTradeInCarNo: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaTradeInCarModel: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaTradeInAmount: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
+  // Delivery Details
+  vsaDateOfRegistration: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaRegistrationNo: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaChassisNo: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaEngineNo: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaMotorNo: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
+  // Insurance
+  vsaInsuranceCompany: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  vsaInsuranceFee: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
+  // Remarks & Loan Details (VSA)
+  vsaLoanAmount: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaInterest: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaTenure: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaAdminFee: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaInsuranceSubsidy: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  vsaMonthlyRepayment: z
+    .number()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
   // Metadata
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
