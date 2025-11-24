@@ -26,6 +26,7 @@
 .customer-list-title h2 {
   margin: 0;
   font-size: 1.125rem;
+  color: var(--text-on-dark);
 }
 
 .customer-count {
@@ -62,13 +63,14 @@
   border-radius: var(--border-radius-sm);
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .filter-tab:hover {
   background: var(--bg-tertiary);
+  color: var(--text-on-dark);
 }
 
 .filter-tab.active {

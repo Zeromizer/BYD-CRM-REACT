@@ -34,14 +34,14 @@
 .logo-main {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-inverse);
+  color: var(--text-on-dark);
   letter-spacing: 0.5px;
 }
 
 .logo-subtitle {
   font-size: 0.75rem;
   font-weight: 400;
-  color: var(--text-inverse);
+  color: var(--text-on-dark);
   letter-spacing: 1px;
   text-transform: uppercase;
   opacity: 0.8;
@@ -62,7 +62,7 @@
 
 .nav-link:hover {
   background-color: var(--bg-tertiary);
-  color: var(--text-inverse);
+  color: var(--text-on-dark);
 }
 
 .nav-link.active {
@@ -92,7 +92,7 @@
 
 .user-name {
   font-weight: 500;
-  color: var(--text-inverse);
+  color: var(--text-on-dark);
 }
 
 .btn-signout {
@@ -100,7 +100,7 @@
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--border-radius);
-  color: var(--text-inverse);
+  color: var(--text-on-dark);
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);

@@ -34,11 +34,11 @@
 
 .btn-secondary {
   background: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--text-on-dark);
 }
 .btn-secondary:hover:not(:disabled) {
   background: #364254;
-  color: var(--text-primary);
+  color: var(--text-on-dark);
 }
 
 .btn-danger {
@@ -55,7 +55,7 @@
 }
 .btn-ghost:hover:not(:disabled) {
   background: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--text-on-dark);
 }
 
 .btn-loading {
@@ -83,7 +83,7 @@
 .input-label {
   font-weight: 500;
   font-size: 0.875rem;
-  color: var(--text-inverse);
+  color: var(--text-primary);
 }
 
 .input-field {
@@ -93,7 +93,7 @@
   font-size: 1rem;
   transition: all var(--transition-fast);
   background: var(--bg-primary);
-  color: var(--text-inverse);
+  color: var(--text-primary);
 }
 
 .input-field:focus {
@@ -175,7 +175,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
-  color: var(--text-inverse);
+  color: var(--text-primary);
 }
 
 .modal-close {
@@ -195,7 +195,7 @@
 
 .modal-close:hover {
   background: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--text-on-dark);
 }
 
 .modal-content {
