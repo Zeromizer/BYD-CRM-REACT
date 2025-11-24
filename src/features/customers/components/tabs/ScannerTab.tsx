@@ -13,7 +13,6 @@ export function ScannerTab({}: ScannerTabProps) {
         <h3 className="section-title">Document Scanner</h3>
         <div className="scanner-section">
           <div className="scanner-placeholder">
-            <span className="scanner-icon">📱</span>
             <h4>Mobile Scanner Integration</h4>
             <p>
               Use your mobile device camera to scan and upload customer documents directly to Google Drive.
@@ -29,13 +28,13 @@ export function ScannerTab({}: ScannerTabProps) {
         <h3 className="section-title">Quick Actions</h3>
         <div className="scanner-actions">
           <Button variant="primary" disabled>
-            📷 Scan Document
+            Scan Document
           </Button>
           <Button variant="secondary" disabled>
-            📤 Upload from Device
+            Upload from Device
           </Button>
           <Button variant="secondary" disabled>
-            🖼️ Scan QR Code
+            Scan QR Code
           </Button>
         </div>
         <p className="helper-text">
@@ -46,7 +45,6 @@ export function ScannerTab({}: ScannerTabProps) {
       <Card className="details-section">
         <h3 className="section-title">Recent Scans</h3>
         <div className="empty-scans">
-          <span className="empty-icon">🔍</span>
           <p>No scanned documents yet</p>
         </div>
       </Card>

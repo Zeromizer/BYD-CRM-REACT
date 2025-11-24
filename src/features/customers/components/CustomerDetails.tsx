@@ -35,7 +35,6 @@ export function CustomerDetails({
     return (
       <div className="customer-details empty">
         <div className="empty-details">
-          <span className="empty-icon">👈</span>
           <h3>Select a Customer</h3>
           <p>Choose a customer from the list to view their details</p>
         </div>
@@ -85,21 +84,21 @@ export function CustomerDetails({
         </div>
         <div className="details-actions">
           <Button variant="secondary" size="sm" onClick={onEdit}>
-            ✏️ Edit
+            Edit
           </Button>
           <Button
             variant="secondary"
             size="sm"
             onClick={() => onToggleDealClosed(customer.id)}
           >
-            {customer.dealClosed ? '🔓 Reopen' : '✅ Close Deal'}
+            {customer.dealClosed ? 'Reopen' : 'Close Deal'}
           </Button>
           <Button
             variant="danger"
             size="sm"
             onClick={() => setShowDeleteModal(true)}
           >
-            🗑️ Delete
+            Delete
           </Button>
         </div>
       </div>

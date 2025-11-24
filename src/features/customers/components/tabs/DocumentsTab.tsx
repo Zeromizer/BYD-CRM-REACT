@@ -29,7 +29,7 @@ export function DocumentsTab({ customer, onOpenDrive }: DocumentsTabProps) {
                 }
               }}
             >
-              📁 Open Google Drive Folder
+              Open Google Drive Folder
             </Button>
             {customer.subfolders && Object.keys(customer.subfolders).length > 0 && (
               <div className="subfolders">
@@ -44,7 +44,7 @@ export function DocumentsTab({ customer, onOpenDrive }: DocumentsTabProps) {
                           window.open(`https://drive.google.com/drive/folders/${id}`, '_blank');
                         }}
                       >
-                        📂 {name}
+                        {name}
                       </Button>
                     </li>
                   ))}
@@ -54,7 +54,6 @@ export function DocumentsTab({ customer, onOpenDrive }: DocumentsTabProps) {
           </div>
         ) : (
           <div className="empty-documents">
-            <span className="empty-icon">📄</span>
             <p>No document folder has been created for this customer yet.</p>
             {onOpenDrive && (
               <Button variant="primary" onClick={onOpenDrive}>
@@ -71,31 +70,31 @@ export function DocumentsTab({ customer, onOpenDrive }: DocumentsTabProps) {
           <div className="checklist-item">
             <span className="checklist-label">NRIC Copy</span>
             <span className="checklist-status">
-              {customer.checklist?.nricCollected ? '✅' : '⏳'}
+              {customer.checklist?.nricCollected ? 'Complete' : 'Pending'}
             </span>
           </div>
           <div className="checklist-item">
             <span className="checklist-label">VSA Signed</span>
             <span className="checklist-status">
-              {customer.checklist?.vsaSigned ? '✅' : '⏳'}
+              {customer.checklist?.vsaSigned ? 'Complete' : 'Pending'}
             </span>
           </div>
           <div className="checklist-item">
             <span className="checklist-label">Deposit Receipt</span>
             <span className="checklist-status">
-              {customer.checklist?.depositReceived ? '✅' : '⏳'}
+              {customer.checklist?.depositReceived ? 'Complete' : 'Pending'}
             </span>
           </div>
           <div className="checklist-item">
             <span className="checklist-label">Loan Approval</span>
             <span className="checklist-status">
-              {customer.checklist?.loanApproved ? '✅' : '⏳'}
+              {customer.checklist?.loanApproved ? 'Complete' : 'Pending'}
             </span>
           </div>
           <div className="checklist-item">
             <span className="checklist-label">Insurance Documents</span>
             <span className="checklist-status">
-              {customer.checklist?.insuranceArranged ? '✅' : '⏳'}
+              {customer.checklist?.insuranceArranged ? 'Complete' : 'Pending'}
             </span>
           </div>
         </div>
