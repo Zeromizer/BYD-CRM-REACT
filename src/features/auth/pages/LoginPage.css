@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-secondary);
   padding: var(--spacing-md);
 }
 
@@ -21,21 +21,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
 }
 
-.logo-icon {
-  font-size: 2.5rem;
+.logo-text {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
-.login-logo h1 {
-  font-size: 2rem;
-  margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logo-main {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.logo-subtitle-small {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .login-subtitle {
@@ -175,11 +182,11 @@
     padding: var(--spacing-xl);
   }
 
-  .login-logo h1 {
-    font-size: 1.5rem;
+  .logo-main {
+    font-size: 2rem;
   }
 
-  .logo-icon {
-    font-size: 2rem;
+  .logo-subtitle-small {
+    font-size: 0.75rem;
   }
 }

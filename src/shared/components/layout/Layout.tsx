@@ -13,7 +13,10 @@ export function Layout() {
     <div className="layout">
       <header className="header">
         <div className="header-left">
-          <h1 className="header-logo">BYD CRM</h1>
+          <div className="header-logo">
+            <span className="logo-main">BYD</span>
+            <span className="logo-subtitle">MOTOR-EAST</span>
+          </div>
           <nav className="header-nav">
             <NavLink
               to="/"
