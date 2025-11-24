@@ -59,10 +59,32 @@ export class AuthService {
         this.tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: CONFIG.GOOGLE.CLIENT_ID,
           scope: CONFIG.GOOGLE.SCOPES,
-          callback: (response) => {
+          callback: async (response) => {
+            if (response.error) {
+              console.error('❌ OAuth error:', response.error);
+              return;
+            }
+
             if (response.access_token) {
               this.accessToken = response.access_token;
-              this.notifyAuthStateChange(true);
+              gapi.client.setToken({ access_token: response.access_token });
+              localStorage.setItem('access_token', response.access_token);
+
+              // Get user info and store consultant data
+              try {
+                const userInfo = await this.getUserInfo();
+                const consultant = {
+                  id: userInfo.id,
+                  email: userInfo.email,
+                  name: userInfo.name,
+                  picture: userInfo.picture,
+                };
+                localStorage.setItem('consultant', JSON.stringify(consultant));
+                this.notifyAuthStateChange(true);
+                console.log('✅ Signed in as:', consultant.email);
+              } catch (error) {
+                console.error('❌ Failed to get user info:', error);
+              }
             }
           },
         });
@@ -158,36 +180,27 @@ export class AuthService {
 
     return new Promise((resolve, reject) => {
       try {
-        // Request access token and user info
+        // Store the original callback
+        const originalCallback = this.tokenClient!.callback;
+
+        // Set a one-time callback that resolves the promise
         this.tokenClient!.callback = async (response) => {
+          // Also call the original callback to maintain functionality
+          if (originalCallback) {
+            await originalCallback(response);
+          }
+
           if (response.error) {
             reject(new Error('Failed to sign in with Google'));
             return;
           }
 
-          this.accessToken = response.access_token;
-          gapi.client.setToken({ access_token: response.access_token });
-
-          // Store token in localStorage for persistence
-          localStorage.setItem('access_token', response.access_token);
-
-          // Get user info
-          try {
-            const userInfo = await this.getUserInfo();
-            const consultant: Consultant = {
-              id: userInfo.id,
-              email: userInfo.email,
-              name: userInfo.name,
-              picture: userInfo.picture,
-            };
-
-            localStorage.setItem('consultant', JSON.stringify(consultant));
-            this.notifyAuthStateChange(true);
-
-            console.log('✅ Signed in as:', consultant.email);
+          // Get the consultant data that was stored by the callback
+          const consultant = this.getCurrentConsultant();
+          if (consultant) {
             resolve(consultant);
-          } catch (error) {
-            reject(error);
+          } else {
+            reject(new Error('Failed to retrieve consultant data after sign in'));
           }
         };
 
