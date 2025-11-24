@@ -11,7 +11,6 @@ export function ExcelPage() {
   const queryClient = useQueryClient();
   const [selectedTemplate, setSelectedTemplate] = useState<ExcelTemplate | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [showMappingModal, setShowMappingModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
@@ -387,7 +386,7 @@ function GenerateExcelModal({
       case 'fullAddress':
         return [customer.address, customer.addressContinue].filter(Boolean).join(', ');
       default:
-        return String((customer as Record<string, unknown>)[fieldKey] || '');
+        return String((customer as unknown as Record<string, unknown>)[fieldKey] || '');
     }
   };
 

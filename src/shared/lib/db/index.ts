@@ -60,6 +60,7 @@ export interface FormTemplate {
  * Excel cell mapping
  */
 export interface ExcelMapping {
+  id: string;
   customerField: string;
   cell: string;
   sheetName?: string;

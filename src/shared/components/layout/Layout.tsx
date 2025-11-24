@@ -1,10 +1,9 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import './Layout.css';
 
 export function Layout() {
   const { consultant, signOut, isSignedIn } = useAuth();
-  const location = useLocation();
 
   if (!isSignedIn) {
     return <Outlet />;
