@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Customer } from '@/shared/lib/db';
-import { Input, Card, Badge, Loading, EmptyState, Button } from '@/shared/components/ui';
+import { Input, Loading, EmptyState, Button } from '@/shared/components/ui';
 import './CustomerList.css';
 
 interface CustomerListProps {
@@ -19,7 +19,7 @@ export function CustomerList({
   isLoading,
 }: CustomerListProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all');
+  const [filterStatus] = useState<'all' | 'open' | 'closed'>('all');
 
   const filteredCustomers = useMemo(() => {
     let result = customers;
@@ -46,13 +46,6 @@ export function CustomerList({
     return result;
   }, [customers, searchQuery, filterStatus]);
 
-  const stats = useMemo(() => {
-    return {
-      total: customers.length,
-      open: customers.filter((c) => !c.dealClosed).length,
-      closed: customers.filter((c) => c.dealClosed).length,
-    };
-  }, [customers]);
 
   if (isLoading) {
     return (
