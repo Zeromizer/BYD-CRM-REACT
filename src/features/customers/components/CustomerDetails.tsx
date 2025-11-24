@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Customer } from '@/shared/lib/db';
-import { Button, Badge, Modal } from '@/shared/components/ui';
+import { Button, Modal } from '@/shared/components/ui';
 import { DetailsTab } from './tabs/DetailsTab';
 import { ProposalTab } from './tabs/ProposalTab';
 import { VSATab } from './tabs/VSATab';
