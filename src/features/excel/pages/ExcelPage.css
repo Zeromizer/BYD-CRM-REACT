@@ -1,0 +1,257 @@
+.excel-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px - var(--spacing-lg) * 2);
+}
+
+.excel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.excel-header h1 {
+  margin: 0;
+}
+
+.excel-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--spacing-lg);
+  flex: 1;
+  min-height: 0;
+}
+
+.excel-sidebar {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.excel-main {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.template-list {
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.template-card {
+  padding: var(--spacing-md);
+}
+
+.template-card h3 {
+  margin: 0 0 var(--spacing-xs);
+  font-size: 0.9375rem;
+}
+
+.template-card p {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.mapping-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mapping-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.mapping-toolbar h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.mappings-section {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+.mappings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.mappings-header h3 {
+  margin: 0;
+}
+
+.mappings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.mapping-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+}
+
+.mapping-arrow {
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.mapping-info {
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.mapping-info h4 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.mapping-info ol {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.mapping-info li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Upload Modal */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.file-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.file-input-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.file-input {
+  padding: var(--spacing-sm);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.file-selected {
+  padding: var(--spacing-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Generate Modal */
+.generate-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.generate-form p {
+  margin: 0;
+}
+
+.preview-data {
+  background: var(--bg-tertiary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+}
+
+.preview-data h4 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.preview-item {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.preview-cell {
+  font-weight: 600;
+  color: var(--color-primary);
+  min-width: 50px;
+}
+
+.preview-value {
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .excel-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px 1fr;
+  }
+
+  .mapping-toolbar {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .toolbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .mapping-row {
+    flex-wrap: wrap;
+  }
+}
