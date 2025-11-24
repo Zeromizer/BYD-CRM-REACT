@@ -12,12 +12,15 @@ export interface Consultant {
 
 /**
  * Authentication Service
- * Handles Google OAuth authentication and session management
+ * Handles Google OAuth authentication using Google Identity Services (GIS)
+ * and Google API Client for Drive access
  */
 export class AuthService {
   private static instance: AuthService;
-  private auth: gapi.auth2.GoogleAuth | null = null;
+  private tokenClient: google.accounts.oauth2.TokenClient | null = null;
+  private accessToken: string = '';
   private isInitialized = false;
+  private authStateListeners: ((isSignedIn: boolean) => void)[] = [];
 
   private constructor() {}
 
@@ -32,108 +35,198 @@ export class AuthService {
   }
 
   /**
-   * Initialize Google API client
+   * Initialize Google Identity Services and API client
    */
   async init(): Promise<void> {
     if (this.isInitialized) {
       return;
     }
 
-    return new Promise((resolve, reject) => {
-      // Check if script already loaded
-      if (window.gapi) {
-        this.loadAuth(resolve, reject);
-        return;
+    try {
+      // Load both GIS and GAPI scripts
+      await Promise.all([
+        this.loadGISScript(),
+        this.loadGAPIScript(),
+      ]);
+
+      // Initialize token client for OAuth 2.0
+      this.tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CONFIG.GOOGLE.CLIENT_ID,
+        scope: CONFIG.GOOGLE.SCOPES,
+        callback: (response) => {
+          if (response.access_token) {
+            this.accessToken = response.access_token;
+            this.notifyAuthStateChange(true);
+          }
+        },
+      });
+
+      // Initialize GAPI client for Drive API
+      await new Promise<void>((resolve, reject) => {
+        gapi.load('client', async () => {
+          try {
+            await gapi.client.init({
+              apiKey: CONFIG.GOOGLE.API_KEY,
+              discoveryDocs: [...CONFIG.GOOGLE.DISCOVERY_DOCS],
+            });
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
+      });
+
+      // Check if we have a stored session
+      const stored = sessionStorage.getItem('consultant');
+      const storedToken = sessionStorage.getItem('access_token');
+      if (stored && storedToken) {
+        this.accessToken = storedToken;
+        gapi.client.setToken({ access_token: storedToken });
       }
 
-      // Load GAPI script
+      this.isInitialized = true;
+      console.log('✅ Google API initialized with GIS');
+    } catch (error) {
+      console.error('❌ Failed to initialize Google API:', error);
+      throw error instanceof Error
+        ? error
+        : new Error('Failed to initialize Google API');
+    }
+  }
+
+  /**
+   * Load Google Identity Services script
+   */
+  private loadGISScript(): Promise<void> {
+    if (window.google?.accounts) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://apis.google.com/js/api.js';
+      script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
       script.defer = true;
-
-      script.onload = () => {
-        this.loadAuth(resolve, reject);
-      };
-
-      script.onerror = () => {
-        reject(new Error('Failed to load Google API script'));
-      };
-
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load GIS script'));
       document.body.appendChild(script);
     });
   }
 
   /**
-   * Load Google Auth
+   * Load Google API script
    */
-  private loadAuth(resolve: () => void, reject: (error: Error) => void): void {
-    gapi.load('client:auth2', async () => {
+  private loadGAPIScript(): Promise<void> {
+    if (window.gapi) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load GAPI script'));
+      document.body.appendChild(script);
+    });
+  }
+
+  /**
+   * Sign in with Google using OAuth 2.0 token flow
+   */
+  async signIn(): Promise<Consultant> {
+    if (!this.tokenClient) {
+      throw new Error('Google Auth not initialized. Call init() first.');
+    }
+
+    return new Promise((resolve, reject) => {
       try {
-        await gapi.client.init({
-          apiKey: CONFIG.GOOGLE.API_KEY,
-          clientId: CONFIG.GOOGLE.CLIENT_ID,
-          discoveryDocs: [...CONFIG.GOOGLE.DISCOVERY_DOCS],
-          scope: CONFIG.GOOGLE.SCOPES,
-        });
+        // Request access token and user info
+        this.tokenClient!.callback = async (response) => {
+          if (response.error) {
+            reject(new Error('Failed to sign in with Google'));
+            return;
+          }
 
-        this.auth = gapi.auth2.getAuthInstance();
-        this.isInitialized = true;
+          this.accessToken = response.access_token;
+          gapi.client.setToken({ access_token: response.access_token });
 
-        console.log('✅ Google API initialized');
-        resolve();
+          // Store token
+          sessionStorage.setItem('access_token', response.access_token);
+
+          // Get user info
+          try {
+            const userInfo = await this.getUserInfo();
+            const consultant: Consultant = {
+              id: userInfo.id,
+              email: userInfo.email,
+              name: userInfo.name,
+              picture: userInfo.picture,
+            };
+
+            sessionStorage.setItem('consultant', JSON.stringify(consultant));
+            this.notifyAuthStateChange(true);
+
+            console.log('✅ Signed in as:', consultant.email);
+            resolve(consultant);
+          } catch (error) {
+            reject(error);
+          }
+        };
+
+        // Trigger sign-in flow
+        this.tokenClient!.requestAccessToken({ prompt: 'consent' });
       } catch (error) {
-        console.error('❌ Failed to initialize Google API:', error);
-        reject(
-          error instanceof Error
-            ? error
-            : new Error('Failed to initialize Google API')
-        );
+        console.error('❌ Sign in failed:', error);
+        reject(new Error('Failed to sign in with Google'));
       }
     });
   }
 
   /**
-   * Sign in with Google
+   * Get user info from Google
    */
-  async signIn(): Promise<Consultant> {
-    if (!this.auth) {
-      throw new Error('Google Auth not initialized. Call init() first.');
+  private async getUserInfo(): Promise<{
+    id: string;
+    email: string;
+    name: string;
+    picture: string;
+  }> {
+    const response = await fetch(
+      'https://www.googleapis.com/oauth2/v2/userinfo',
+      {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to get user info');
     }
 
-    try {
-      const googleUser = await this.auth.signIn();
-      const profile = googleUser.getBasicProfile();
-
-      const consultant: Consultant = {
-        id: profile.getId(),
-        email: profile.getEmail(),
-        name: profile.getName(),
-        picture: profile.getImageUrl(),
-      };
-
-      // Store in sessionStorage
-      sessionStorage.setItem('consultant', JSON.stringify(consultant));
-
-      console.log('✅ Signed in as:', consultant.email);
-      return consultant;
-    } catch (error) {
-      console.error('❌ Sign in failed:', error);
-      throw new Error('Failed to sign in with Google');
-    }
+    return response.json();
   }
 
   /**
    * Sign out
    */
   async signOut(): Promise<void> {
-    if (!this.auth) {
-      throw new Error('Google Auth not initialized');
-    }
-
     try {
-      await this.auth.signOut();
+      if (this.accessToken) {
+        // Revoke token
+        google.accounts.oauth2.revoke(this.accessToken, () => {
+          console.log('✅ Token revoked');
+        });
+      }
+
+      this.accessToken = '';
+      gapi.client.setToken(null);
       sessionStorage.removeItem('consultant');
+      sessionStorage.removeItem('access_token');
+      this.notifyAuthStateChange(false);
+
       console.log('✅ Signed out');
     } catch (error) {
       console.error('❌ Sign out failed:', error);
@@ -145,7 +238,7 @@ export class AuthService {
    * Check if user is signed in
    */
   isSignedIn(): boolean {
-    return this.auth?.isSignedIn.get() ?? false;
+    return !!this.accessToken && !!sessionStorage.getItem('consultant');
   }
 
   /**
@@ -166,26 +259,29 @@ export class AuthService {
    * Get access token for API calls
    */
   getAccessToken(): string {
-    const user = this.auth?.currentUser.get();
-    return user?.getAuthResponse().access_token ?? '';
+    return this.accessToken;
   }
 
   /**
    * Listen for auth state changes
    */
   onAuthStateChange(callback: (isSignedIn: boolean) => void): () => void {
-    if (!this.auth) {
-      console.warn('Auth not initialized, cannot listen to state changes');
-      return () => {};
-    }
-
-    const listenerId = this.auth.isSignedIn.listen(callback);
+    this.authStateListeners.push(callback);
 
     // Return cleanup function
     return () => {
-      // Cleanup if needed (gapi doesn't provide direct unlisten)
-      console.log('Cleaned up auth listener:', listenerId);
+      const index = this.authStateListeners.indexOf(callback);
+      if (index > -1) {
+        this.authStateListeners.splice(index, 1);
+      }
     };
+  }
+
+  /**
+   * Notify all listeners of auth state change
+   */
+  private notifyAuthStateChange(isSignedIn: boolean): void {
+    this.authStateListeners.forEach((callback) => callback(isSignedIn));
   }
 
   /**
