@@ -1,11 +1,10 @@
 import { Customer } from '@/shared/lib/db';
-import { Card, Checkbox, Button } from '@/shared/components/ui';
+import { Card, Checkbox } from '@/shared/components/ui';
 import './Tabs.css';
 
 interface DetailsTabProps {
   customer: Customer;
   onUpdateChecklist: (id: string, key: string, value: boolean) => Promise<void>;
-  onEdit: () => void;
 }
 
 const CHECKLIST_ITEMS = [
@@ -20,7 +19,7 @@ const CHECKLIST_ITEMS = [
   { key: 'handoverCompleted', label: 'Handover Completed' },
 ];
 
-export function DetailsTab({ customer, onUpdateChecklist, onEdit }: DetailsTabProps) {
+export function DetailsTab({ customer, onUpdateChecklist }: DetailsTabProps) {
   const handleChecklistChange = async (key: string, checked: boolean) => {
     await onUpdateChecklist(customer.id, key, checked);
   };
@@ -34,12 +33,7 @@ export function DetailsTab({ customer, onUpdateChecklist, onEdit }: DetailsTabPr
     <div className="tab-content">
       {/* Contact Information */}
       <Card className="details-section">
-        <div className="section-header">
-          <h3 className="section-title">Contact Information</h3>
-          <Button variant="primary" size="sm" onClick={onEdit}>
-            Edit Details
-          </Button>
-        </div>
+        <h3 className="section-title">Contact Information</h3>
         <div className="info-grid">
           <div className="info-item">
             <label>PHONE</label>

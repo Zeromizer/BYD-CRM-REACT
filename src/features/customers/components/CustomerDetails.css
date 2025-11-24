@@ -4,8 +4,8 @@
   height: 100%;
   background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .customer-details.empty {
@@ -37,18 +37,24 @@
 .details-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-lg) var(--spacing-xl);
-  background: var(--bg-primary);
+  align-items: flex-start;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
   flex-wrap: wrap;
   gap: var(--spacing-md);
 }
 
-.details-customer-name {
+.details-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.details-title h2 {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-on-dark);
 }
 
 .details-actions {
@@ -61,9 +67,9 @@
 .tabs-nav {
   display: flex;
   gap: 0;
-  padding: 0 var(--spacing-xl);
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
+  padding: 0 var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
   overflow-x: auto;
 }
 
@@ -71,19 +77,20 @@
   padding: var(--spacing-md) var(--spacing-lg);
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--text-on-dark-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   position: relative;
   white-space: nowrap;
   transition: all var(--transition-fast);
-  border-bottom: 3px solid transparent;
-  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
 }
 
 .tab-button:hover {
-  color: var(--text-primary);
+  color: var(--text-on-dark);
+  background: var(--bg-tertiary);
 }
 
 .tab-button.active {
@@ -94,17 +101,10 @@
 .details-content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.details-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: var(--spacing-lg);
-  margin-top: auto;
+  gap: var(--spacing-md);
 }
 
 .details-section {
