@@ -64,10 +64,15 @@ This guide will help you configure Google OAuth credentials for the BYD CRM appl
    ```
 
 6. **Add Authorized redirect URIs:**
+
+   **IMPORTANT**: Add both with and without trailing slash to ensure OAuth works correctly:
    ```
    https://zeromizer.github.io/BYD-CRM-REACT
+   https://zeromizer.github.io/BYD-CRM-REACT/
    http://localhost:5173
+   http://localhost:5173/
    http://localhost:3000
+   http://localhost:3000/
    ```
 
 7. Click "Create"

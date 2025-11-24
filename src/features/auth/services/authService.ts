@@ -93,8 +93,8 @@ export class AuthService {
       });
 
       // Check if we have a stored session
-      const stored = sessionStorage.getItem('consultant');
-      const storedToken = sessionStorage.getItem('access_token');
+      const stored = localStorage.getItem('consultant');
+      const storedToken = localStorage.getItem('access_token');
       if (stored && storedToken) {
         this.accessToken = storedToken;
         gapi.client.setToken({ access_token: storedToken });
@@ -168,8 +168,8 @@ export class AuthService {
           this.accessToken = response.access_token;
           gapi.client.setToken({ access_token: response.access_token });
 
-          // Store token
-          sessionStorage.setItem('access_token', response.access_token);
+          // Store token in localStorage for persistence
+          localStorage.setItem('access_token', response.access_token);
 
           // Get user info
           try {
@@ -181,7 +181,7 @@ export class AuthService {
               picture: userInfo.picture,
             };
 
-            sessionStorage.setItem('consultant', JSON.stringify(consultant));
+            localStorage.setItem('consultant', JSON.stringify(consultant));
             this.notifyAuthStateChange(true);
 
             console.log('✅ Signed in as:', consultant.email);
@@ -239,8 +239,8 @@ export class AuthService {
 
       this.accessToken = '';
       gapi.client.setToken(null);
-      sessionStorage.removeItem('consultant');
-      sessionStorage.removeItem('access_token');
+      localStorage.removeItem('consultant');
+      localStorage.removeItem('access_token');
       this.notifyAuthStateChange(false);
 
       console.log('✅ Signed out');
@@ -254,14 +254,14 @@ export class AuthService {
    * Check if user is signed in
    */
   isSignedIn(): boolean {
-    return !!this.accessToken && !!sessionStorage.getItem('consultant');
+    return !!this.accessToken && !!localStorage.getItem('consultant');
   }
 
   /**
-   * Get current consultant from session
+   * Get current consultant from localStorage
    */
   getCurrentConsultant(): Consultant | null {
-    const stored = sessionStorage.getItem('consultant');
+    const stored = localStorage.getItem('consultant');
     if (!stored) return null;
 
     try {
