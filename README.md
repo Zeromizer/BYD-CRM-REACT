@@ -63,13 +63,17 @@ VITE_ENCRYPTION_SALT=your-random-salt-min-32-chars
 
 ### 3. Get Google OAuth Credentials
 
+**⚠️ IMPORTANT:** Google OAuth must be properly configured or the app will fail to load.
+
+See **[GOOGLE_SETUP_GUIDE.md](./GOOGLE_SETUP_GUIDE.md)** for detailed step-by-step instructions.
+
+Quick summary:
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project
 3. Enable Google Drive API
-4. Create OAuth 2.0 Client ID
-5. Add authorized origins (e.g., `http://localhost:5173`)
-6. Create API Key
-7. Copy credentials to `.env`
+4. Create OAuth 2.0 Client ID with your domains in authorized origins
+5. Create API Key with proper restrictions
+6. Copy credentials to `.env`
 
 ### 4. Start Development Server
 
@@ -282,9 +286,22 @@ The app is a static SPA and can be deployed to:
 
 ## 🐛 Troubleshooting
 
+### 400 Error on Page Load
+
+If you see a `400 Bad Request` error when the app loads:
+
+1. **Check Google OAuth Configuration**: Your Client ID must be configured for your domain
+2. **Verify Authorized Origins**: Go to Google Cloud Console and add your domain to "Authorized JavaScript origins"
+3. **Check API Key**: Ensure the API key has Google Drive API enabled and proper referrer restrictions
+4. **See Setup Guide**: Follow [GOOGLE_SETUP_GUIDE.md](./GOOGLE_SETUP_GUIDE.md) for detailed instructions
+
 ### "Google API not initialized"
 
 Make sure you've set `VITE_GOOGLE_CLIENT_ID` and `VITE_GOOGLE_API_KEY` in `.env`
+
+### Origin Mismatch Error
+
+Your current domain is not in the authorized JavaScript origins list. Add it in Google Cloud Console → Credentials → OAuth 2.0 Client ID
 
 ### TypeScript errors
 
