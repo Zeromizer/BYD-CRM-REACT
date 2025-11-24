@@ -65,7 +65,10 @@ export function CustomerList({
   return (
     <div className="customer-list">
       <div className="customer-list-header">
-        <h2>Customer List</h2>
+        <div className="customer-list-title">
+          <h2>Customers</h2>
+          <span className="customer-count">{stats.total}</span>
+        </div>
         <Button onClick={onAddNew} size="sm">
           + Add Customer
         </Button>
@@ -73,11 +76,31 @@ export function CustomerList({
 
       <div className="customer-list-filters">
         <Input
-          placeholder="Search customers..."
+          placeholder="Search by name, phone, NRIC..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
+        <div className="filter-tabs">
+          <button
+            className={`filter-tab ${filterStatus === 'all' ? 'active' : ''}`}
+            onClick={() => setFilterStatus('all')}
+          >
+            All ({stats.total})
+          </button>
+          <button
+            className={`filter-tab ${filterStatus === 'open' ? 'active' : ''}`}
+            onClick={() => setFilterStatus('open')}
+          >
+            Open ({stats.open})
+          </button>
+          <button
+            className={`filter-tab ${filterStatus === 'closed' ? 'active' : ''}`}
+            onClick={() => setFilterStatus('closed')}
+          >
+            Closed ({stats.closed})
+          </button>
+        </div>
       </div>
 
       <div className="customer-list-items">
@@ -117,21 +140,29 @@ interface CustomerCardProps {
 }
 
 function CustomerCard({ customer, selected, onClick }: CustomerCardProps) {
-  const getInitials = (name: string) => {
-    const words = name.trim().split(' ');
-    if (words.length === 1) return words[0].charAt(0).toUpperCase();
-    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
-  };
-
   return (
-    <div className={`customer-card ${selected ? 'selected' : ''}`} onClick={onClick}>
-      <div className="customer-avatar">
-        {getInitials(customer.name)}
-      </div>
-      <div className="customer-info">
+    <Card
+      className="customer-card"
+      selected={selected}
+      onClick={onClick}
+    >
+      <div className="customer-card-header">
         <h3 className="customer-name">{customer.name}</h3>
-        <span className="customer-id">{customer.nric}</span>
+        <Badge variant={customer.dealClosed ? 'success' : 'warning'}>
+          {customer.dealClosed ? 'Closed' : 'Open'}
+        </Badge>
       </div>
-    </div>
+      <div className="customer-card-details">
+        <span className="customer-phone">{customer.phone}</span>
+        {customer.vsaNo && (
+          <span className="customer-vsa">VSA: {customer.vsaNo}</span>
+        )}
+      </div>
+      <div className="customer-card-footer">
+        <span className="customer-date">
+          Added: {new Date(customer.createdAt).toLocaleDateString()}
+        </span>
+      </div>
+    </Card>
   );
 }
