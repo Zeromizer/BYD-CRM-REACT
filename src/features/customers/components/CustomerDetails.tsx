@@ -59,7 +59,7 @@ export function CustomerDetails({
 
     switch (activeTab) {
       case 'details':
-        return <DetailsTab customer={customer} onUpdateChecklist={onUpdateChecklist} />;
+        return <DetailsTab customer={customer} onUpdateChecklist={onUpdateChecklist} onEdit={onEdit} />;
       case 'proposal':
         return <ProposalTab customer={customer} onEdit={onEdit} />;
       case 'vsa':
@@ -76,29 +76,16 @@ export function CustomerDetails({
   return (
     <div className="customer-details">
       <div className="details-header">
-        <div className="details-title">
-          <h2>{customer.name}</h2>
-          <Badge variant={customer.dealClosed ? 'success' : 'warning'}>
-            {customer.dealClosed ? 'Deal Closed' : 'In Progress'}
-          </Badge>
-        </div>
+        <h1 className="details-customer-name">{customer.name}</h1>
         <div className="details-actions">
-          <Button variant="secondary" size="sm" onClick={onEdit}>
-            Edit
+          <Button size="sm" onClick={onEdit}>
+            Print Form
           </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => onToggleDealClosed(customer.id)}
-          >
-            {customer.dealClosed ? 'Reopen' : 'Close Deal'}
+          <Button size="sm" onClick={() => onToggleDealClosed(customer.id)}>
+            Combine & Print
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => setShowDeleteModal(true)}
-          >
-            Delete
+          <Button size="sm" onClick={onOpenDrive}>
+            Populate Excel
           </Button>
         </div>
       </div>
@@ -140,6 +127,17 @@ export function CustomerDetails({
       {/* Tab Content */}
       <div className="details-content">
         {renderTabContent()}
+
+        {/* Delete Button */}
+        <div className="details-footer">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            Delete Customer
+          </Button>
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}

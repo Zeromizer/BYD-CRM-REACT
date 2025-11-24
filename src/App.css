@@ -4,20 +4,23 @@
   --color-primary-hover: #00ACC1;
   --color-primary-light: rgba(0, 188, 212, 0.1);
 
-  --color-background-primary: #1f2937; /* Dark navy */
-  --color-background-secondary: #111827; /* Darker navy */
+  /* Dark header and background */
+  --color-background-primary: #f5f7fa; /* Light gray background */
+  --color-background-secondary: #1a1d2e; /* Dark navy for header */
   --color-background-tertiary: #374151; /* Medium navy */
 
   --color-card-background: #ffffff;
   --color-card-dark: #1e293b; /* Dark blue for inner cards */
 
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #9ca3af;
-  --color-text-tertiary: #6b7280;
+  /* Text colors for light theme */
+  --color-text-primary: #1f2937; /* Dark text on light backgrounds */
+  --color-text-secondary: #6b7280; /* Medium gray for secondary text */
+  --color-text-tertiary: #9ca3af; /* Light gray for tertiary text */
+  --color-text-on-dark: #ffffff; /* White text on dark backgrounds */
   --color-text-on-card: #1a1a2e;
 
-  --color-border: #374151;
-  --color-border-light: #e5e7eb;
+  --color-border: #e5e7eb; /* Light border */
+  --color-border-light: #f3f4f6;
 
   --color-success: #10b981;
   --color-warning: #f59e0b;
@@ -26,15 +29,15 @@
 
   /* Legacy aliases for backwards compatibility */
   --bg-primary: var(--color-card-background);
-  --bg-secondary: var(--color-background-primary);
+  --bg-secondary: var(--color-background-secondary);
   --bg-tertiary: var(--color-background-tertiary);
   --bg-dark: var(--color-background-secondary);
-  --text-primary: var(--color-text-on-card);
+  --text-primary: var(--color-text-primary);
   --text-secondary: var(--color-text-secondary);
   --text-tertiary: var(--color-text-tertiary);
-  --text-on-dark: var(--color-text-primary);
-  --text-on-dark-secondary: var(--color-text-secondary);
-  --text-on-dark-tertiary: var(--color-text-tertiary);
+  --text-on-dark: var(--color-text-on-dark);
+  --text-on-dark-secondary: rgba(255, 255, 255, 0.7);
+  --text-on-dark-tertiary: rgba(255, 255, 255, 0.5);
   --border-color: var(--color-border);
 
   /* Typography */
