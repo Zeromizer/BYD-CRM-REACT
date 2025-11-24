@@ -106,7 +106,6 @@ export function CustomerList({
       <div className="customer-list-items">
         {filteredCustomers.length === 0 ? (
           <EmptyState
-            icon="👤"
             title={searchQuery ? 'No customers found' : 'No customers yet'}
             description={
               searchQuery
@@ -154,7 +153,7 @@ function CustomerCard({ customer, selected, onClick }: CustomerCardProps) {
         </Badge>
       </div>
       <div className="customer-card-details">
-        <span className="customer-phone">📱 {customer.phone}</span>
+        <span className="customer-phone">{customer.phone}</span>
         {customer.vsaNo && (
           <span className="customer-vsa">VSA: {customer.vsaNo}</span>
         )}
