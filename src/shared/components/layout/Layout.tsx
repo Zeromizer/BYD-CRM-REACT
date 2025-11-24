@@ -1,9 +1,9 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import './Layout.css';
 
 export function Layout() {
-  const { isSignedIn } = useAuth();
+  const { consultant, signOut, isSignedIn } = useAuth();
 
   if (!isSignedIn) {
     return <Outlet />;
